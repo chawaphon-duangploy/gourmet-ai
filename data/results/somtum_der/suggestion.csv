@@ -1,0 +1,14 @@
+category,suggestion,severity_of_issue,resource_cost,issue_count,complaint_pct,priority_score,priority_rank,severity_reason
+service,Conduct urgent staff hospitality training,High,Low,414,45.0,1242,1,414 complaints = 45.0% of all bad reviews
+service,Implement queue management system for peak hours,High,Low,414,45.0,1241,2,414 complaints = 45.0% of all bad reviews
+service,Hire part-time staff during busy periods,High,Low,414,45.0,1240,3,414 complaints = 45.0% of all bad reviews
+atmosphere,Deep clean facility — focus on restrooms and dining area,High,Low,242,26.3,726,1,242 complaints = 26.3% of all bad reviews
+atmosphere,"Adjust lighting, music volume, and seating comfort",High,Low,242,26.3,725,2,242 complaints = 26.3% of all bad reviews
+atmosphere,Repair or replace damaged furniture,High,Low,242,26.3,724,3,242 complaints = 26.3% of all bad reviews
+price,Benchmark portion size vs competitor pricing,Medium,Low,226,24.5,452,1,226 complaints = 24.5% of all bad reviews
+price,Introduce value-set lunch or dinner promotions,Medium,Low,226,24.5,451,2,226 complaints = 24.5% of all bad reviews
+food,Review recipes and check ingredient freshness daily,Low,Medium,25,2.7,25,1,25 complaints = 2.7% of all bad reviews
+food,Run weekly blind taste tests with kitchen staff,Low,Medium,25,2.7,24,2,25 complaints = 2.7% of all bad reviews
+food,Remove low-rated dishes from menu based on complaint data,Low,Medium,25,2.7,23,3,25 complaints = 2.7% of all bad reviews
+location,Improve roadside signage visibility,Low,Medium,14,1.5,14,1,14 complaints = 1.5% of all bad reviews
+location,Update Google Maps pin and add clear directions online,Low,Medium,14,1.5,13,2,14 complaints = 1.5% of all bad reviews

@@ -1,0 +1,32 @@
+{
+  "job_id": "somtum_der_20260228_152619",
+  "status": "completed",
+  "steps": {
+    "extract": {
+      "status": "ok",
+      "elapsed_sec": 5.25,
+      "rows_extracted": 19458,
+      "raw_path": "data/raw/somtum_der_raw.csv",
+      "source": "huggingface"
+    },
+    "transform": {
+      "status": "ok",
+      "elapsed_sec": 0.84,
+      "rows_staged": 1976,
+      "staged_path": "data/staged/somtum_der_clean.csv",
+      "good_count": 1039,
+      "bad_count": 937
+    },
+    "analyze": {
+      "status": "ok",
+      "elapsed_sec": 87.12,
+      "rows_analyzed": 1976,
+      "bad_review_pct": 46.6,
+      "suggestions_generated": 13,
+      "llm_reviews": 3,
+      "keyword_reviews": 1973,
+      "results_dir": "data/results/somtum_der"
+    }
+  },
+  "completed_at": "2026-02-28T15:27:52.327996"
+}
