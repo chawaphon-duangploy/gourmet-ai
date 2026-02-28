@@ -22,19 +22,28 @@ def extract_data(config: dict) -> dict:
     restaurant_id = config.get("restaurant_id", "default")
     raw_path = f"{RAW_DIR}/{restaurant_id}_raw.csv"
 
-    # ── Option A: Use uploaded CSV ──────────────────────────────────────
+    # ── Option A: Use uploaded CSV ──────────────────────────────────
     if config.get("csv_path") and os.path.exists(config["csv_path"]):
         log.info(f"  Using local CSV: {config['csv_path']}")
         df = pd.read_csv(config["csv_path"])
         df.to_csv(raw_path, index=False, escapechar='\\')
         return {"rows_extracted": len(df), "raw_path": raw_path, "source": "local_csv"}
 
-    # ── Option B: Download from Hugging Face ────────────────────────────
+    # ── Option B: Use cache if valid ────────────────────────────────
     if os.path.exists(raw_path):
-        existing = pd.read_csv(raw_path)
-        log.info(f"  Raw cache found: {len(existing)} rows")
-        return {"rows_extracted": len(existing), "raw_path": raw_path, "source": "cache"}
+        try:
+            existing = pd.read_csv(raw_path)
+            if len(existing) > 1000:
+                log.info(f"  Raw cache found: {len(existing)} rows")
+                return {"rows_extracted": len(existing), "raw_path": raw_path, "source": "cache"}
+            else:
+                log.warning("  Cache too small — re-downloading")
+                os.remove(raw_path)
+        except Exception:
+            log.warning("  Cache corrupted — re-downloading")
+            os.remove(raw_path)
 
+    # ── Option C: Download from Hugging Face ────────────────────────
     try:
         from datasets import load_dataset
         log.info("  Downloading from Hugging Face...")
