@@ -1,0 +1,22 @@
+{
+  "restaurant_id": "somtum_der",
+  "restaurant_name": "Somtum Der",
+  "sample_size": 2000,
+  "csv_path": null,
+  "gemini_api_key": "",
+  "use_llm": true,
+  "n8n_webhook_url": "",
+  "line_notify_token": "",
+  "notify_on_complete": true,
+  "alert_bad_review_threshold_pct": 40,
+  "generate_responses": true,
+  "competitor_benchmarking": false,
+  "latitude": 13.7221,
+  "longitude": 100.5289,
+  "competitor_radius_m": 1000,
+  "google_places_api_key": "",
+  "trend_tracking": true,
+  "trend_spike_threshold_pct": 30,
+  "monitor_enabled": false,
+  "monitor_interval_minutes": 30
+}
