@@ -1,0 +1,160 @@
+{
+  "name": "Gourmet AI — Restaurant Review Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gourmet-ai",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Webhook: Receive Events",
+      "type": "n8n-nodes-base.webhook",
+      "position": [240, 300],
+      "webhookId": "gourmet-ai-events"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event}}",
+              "operation": "equal",
+              "value2": "pipeline_completed"
+            }
+          ]
+        }
+      },
+      "name": "IF: Completed?",
+      "type": "n8n-nodes-base.if",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event}}",
+              "operation": "equal",
+              "value2": "new_review_alert"
+            }
+          ]
+        }
+      },
+      "name": "IF: Alert?",
+      "type": "n8n-nodes-base.if",
+      "position": [500, 500]
+    },
+    {
+      "parameters": {
+        "url": "https://your-server:8000/results/{{$json.restaurant_id}}/summary",
+        "method": "GET",
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "your-api-key" }
+          ]
+        }
+      },
+      "name": "HTTP: Fetch Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [760, 200]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "manager@restaurant.com",
+        "subject": "✅ Gourmet AI — Analysis Ready: {{$json.restaurant_name}}",
+        "text": "Hello,\n\nYour review analysis for **{{$json.restaurant_name}}** is complete.\n\nTotal Reviews: {{$json.data.total_reviews}}\nSatisfaction: {{$json.data.bad_review_pct}}% negative\n\nLog in to the dashboard to view full results.\n\nPowered by Gourmet AI 🍽️"
+      },
+      "name": "Email: Notify Manager",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [1020, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "channel": "#restaurant-alerts",
+        "text": "🚨 *ALERT — {{$json.restaurant_name}}*\n\n{{$json.data.message}}\n\nTop Issue: `{{$json.data.top_issue}}`\nBad Review %: *{{$json.data.bad_review_pct}}%*\n\nPlease review the dashboard immediately."
+      },
+      "name": "Slack: Send Alert",
+      "type": "n8n-nodes-base.slack",
+      "position": [760, 520]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "manager@restaurant.com",
+        "subject": "🚨 Review Alert: High Negative Feedback — {{$json.restaurant_name}}",
+        "text": "Action Required:\n\n{{$json.data.message}}\n\nTop issue category: {{$json.data.top_issue}}\nBad review percentage: {{$json.data.bad_review_pct}}%\n\nPlease take immediate action."
+      },
+      "name": "Email: Send Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [1020, 520]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * MON"
+            }
+          ]
+        }
+      },
+      "name": "⏰ Cron: Weekly Monday 8am",
+      "type": "n8n-nodes-base.cron",
+      "position": [240, 700]
+    },
+    {
+      "parameters": {
+        "url": "https://your-server:8000/run-pipeline",
+        "method": "POST",
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "your-api-key" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "bodyParameters": {
+          "parameters": [
+            { "name": "restaurant_id", "value": "kin_lom_chom_saphan" },
+            { "name": "restaurant_name", "value": "Kin Lom Chom Saphan" },
+            { "name": "sample_size", "value": 2000 },
+            { "name": "n8n_webhook_url", "value": "https://your-n8n.example.com/webhook/gourmet-ai" },
+            { "name": "notify_on_complete", "value": true }
+          ]
+        }
+      },
+      "name": "HTTP: Trigger Weekly Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [500, 700]
+    }
+  ],
+  "connections": {
+    "Webhook: Receive Events": {
+      "main": [[{ "node": "IF: Completed?", "type": "main", "index": 0 }]]
+    },
+    "IF: Completed?": {
+      "main": [
+        [{ "node": "HTTP: Fetch Summary", "type": "main", "index": 0 }],
+        [{ "node": "IF: Alert?", "type": "main", "index": 0 }]
+      ]
+    },
+    "IF: Alert?": {
+      "main": [
+        [{ "node": "Slack: Send Alert", "type": "main", "index": 0 }]
+      ]
+    },
+    "HTTP: Fetch Summary": {
+      "main": [[{ "node": "Email: Notify Manager", "type": "main", "index": 0 }]]
+    },
+    "Slack: Send Alert": {
+      "main": [[{ "node": "Email: Send Alert", "type": "main", "index": 0 }]]
+    },
+    "⏰ Cron: Weekly Monday 8am": {
+      "main": [[{ "node": "HTTP: Trigger Weekly Pipeline", "type": "main", "index": 0 }]]
+    }
+  }
+}
