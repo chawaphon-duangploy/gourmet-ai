@@ -1,4 +1,10 @@
 # Gourmet AI 🍽️
+<p align="center">
+  <img src="img/dashboard.png" width="850"/>
+</p>
+<p align="center">
+  <img src="img/line_notify.png" width="850"/>
+</p>
 
 I'm an Electronics Engineering grad who somehow ended up building an AI system that reads Thai restaurant reviews. Let me explain how that happened.
 
