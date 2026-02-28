@@ -3,15 +3,12 @@
 venv/
 __pycache__/
 *.pyc
-*.pyo
 
-# Data (too large for git)
-# data/
-logs/
+# Keep results but ignore raw/staged (too large)
+data/raw/
+data/staged/
+data/seen/
 
 # OS
 .DS_Store
-Thumbs.db
-
-# VS Code
-.vscode/
+logs/
